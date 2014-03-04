@@ -9,8 +9,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid="PokeLoli", name="PokeLoli", version="1.7srg-1",dependencies="required-after:FML")
-//@NetworkMod(clientSideRequired=true, serverSideRequired=false)
+@Mod(modid="PokeLoli", name="PokeLoli", version="1.7srg-1",dependencies="required-after:FML", useMetadata = true)
 public class PokeLoli
 {
 	@Mod.Instance("PokeLoli")
