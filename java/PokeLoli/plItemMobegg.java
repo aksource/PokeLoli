@@ -60,36 +60,36 @@ public class plItemMobegg extends ItemMonsterPlacer
 	}
 
 	//ItemMonsterPlacerでメソッドが使用されているので，オーバーライド．意味はなかった．
-	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
-	{
-		if (par1ItemStack.getItemDamage() != 0)
-			return super.onItemRightClick(par1ItemStack, par2World, par3EntityPlayer);
-		else {
-			if (par2World.isRemote) {
-				return par1ItemStack;
-			} else {
-				MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(par2World,
-						par3EntityPlayer, true);
-
-				if (movingobjectposition == null) {
-					return par1ItemStack;
-				} else {
-					if (movingobjectposition.typeOfHit == MovingObjectType.ENTITY) {
-						Entity entity = movingobjectposition.entityHit;
-						if (entity instanceof EntityLivingBase) {
-							if (this.itemInteractionForEntity(par1ItemStack, par3EntityPlayer,
-									(EntityLivingBase) entity))
-								return null;
-							else
-								return par1ItemStack;
-						}
-					}
-					return par1ItemStack;
-				}
-			}
-		}
-	}
+//	@Override
+//	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
+//	{
+//		if (par1ItemStack.getItemDamage() != 0)
+//			return super.onItemRightClick(par1ItemStack, par2World, par3EntityPlayer);
+//		else {
+//			if (par2World.isRemote) {
+//				return par1ItemStack;
+//			} else {
+//				MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(par2World,
+//						par3EntityPlayer, true);
+//
+//				if (movingobjectposition == null) {
+//					return par1ItemStack;
+//				} else {
+//					if (movingobjectposition.typeOfHit == MovingObjectType.ENTITY) {
+//						Entity entity = movingobjectposition.entityHit;
+//						if (entity instanceof EntityLivingBase) {
+//							if (this.itemInteractionForEntity(par1ItemStack, par3EntityPlayer,
+//									(EntityLivingBase) entity))
+//								return null;
+//							else
+//								return par1ItemStack;
+//						}
+//					}
+//					return par1ItemStack;
+//				}
+//			}
+//		}
+//	}
 
 	//左クリックでも動作するように．こちらは動く．
 	@Override
