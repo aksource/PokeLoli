@@ -10,7 +10,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid="PokeLoli", name="PokeLoli", version="1.7srg-2",dependencies="required-after:FML", useMetadata = true)
+@Mod(modid="PokeLoli", name="PokeLoli", version="@VERSION@",dependencies="required-after:FML", useMetadata = true)
 public class PokeLoli
 {
 	@Mod.Instance("PokeLoli")
@@ -27,6 +27,6 @@ public class PokeLoli
 	public void load(FMLInitializationEvent event)
 	{
 //		MinecraftForge.EVENT_BUS.register(new PokeLoliEventHandler());
-		GameRegistry.addShapelessRecipe(new ItemStack(pokeEgg, 1, 0), new Object[]{Items.egg, Items.redstone});
+		GameRegistry.addShapelessRecipe(new ItemStack(pokeEgg, 1, 0), Items.egg, Items.redstone);
 	}
 }
