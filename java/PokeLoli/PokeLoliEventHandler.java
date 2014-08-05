@@ -1,10 +1,10 @@
 package PokeLoli;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class PokeLoliEventHandler
 {
