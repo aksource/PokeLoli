@@ -1,7 +1,5 @@
 package PokeLoli;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,7 +28,12 @@ public class plItemMobegg extends ItemMonsterPlacer
 		return super.getUnlocalizedNameInefficiently(par1ItemStack);
 	}
 
-	//Entityを右クリックした時に呼ばれるメソッド．なぜか呼ばれない
+    @Override
+    public int getColorFromItemStack(ItemStack stack, int renderPass) {
+        return 0xFFFFFF;
+    }
+
+    //Entityを右クリックした時に呼ばれるメソッド．なぜか呼ばれない
 	@Override
 	public boolean itemInteractionForEntity(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer,
 			EntityLivingBase par3EntityLivingBase)
@@ -96,8 +99,8 @@ public class plItemMobegg extends ItemMonsterPlacer
 		return true;
 	}
 
+    @SuppressWarnings("unchecked")
 	@Override
-	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
 		par3List.add(new ItemStack(par1, 1, 0));
