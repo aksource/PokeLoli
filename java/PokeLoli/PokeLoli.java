@@ -10,12 +10,20 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-@Mod(modid="PokeLoli", name="PokeLoli", version="@VERSION@",dependencies="required-after:FML", useMetadata = true)
+@Mod(modid = PokeLoli.MOD_ID,
+		name = PokeLoli.MOD_NAME,
+		version = PokeLoli.MOD_VERSION,
+		dependencies = PokeLoli.MOD_DEPENDENCIES,
+		useMetadata = true,
+		acceptedMinecraftVersions = PokeLoli.MOD_MC_VERSION)
 public class PokeLoli
 {
-    public static final String MOD_ID = "PokeLoli";
-	@Mod.Instance("PokeLoli")
-	public static PokeLoli instance;
+	public static final String MOD_ID = "PokeLoli";
+	public static final String MOD_NAME = "PokeLoli";
+	public static final String MOD_VERSION = "@VERSION@";
+	public static final String MOD_DEPENDENCIES = "required-after:Forge@[11.14.0.1237,)";
+	public static final String MOD_MC_VERSION = "[1.8,1.8.9]";
+
 	public static Item pokeEgg;
 	
 	@Mod.EventHandler
