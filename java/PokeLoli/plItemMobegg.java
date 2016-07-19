@@ -1,7 +1,5 @@
 package PokeLoli;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,96 +8,67 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.translation.I18n;
 
 import java.util.List;
 
-public class plItemMobegg extends ItemMonsterPlacer
-{
-	public plItemMobegg()
-	{
-		super();
-	}
+public class plItemMobegg extends ItemMonsterPlacer {
+    public plItemMobegg() {
+        super();
+        this.setRegistryName("monster_placer_custom");
+    }
 
-	@Override
-	public String getUnlocalizedNameInefficiently(ItemStack par1ItemStack)
-	{
-		if (par1ItemStack.getItemDamage() == 0) {
-			return ("" + StatCollector.translateToLocal(this.getUnlocalizedName() + ".name")).trim();
-		}
-		return super.getUnlocalizedNameInefficiently(par1ItemStack);
-	}
+    @Override
+    public String getUnlocalizedNameInefficiently(ItemStack par1ItemStack) {
+        if (par1ItemStack.getItemDamage() == 0) {
+            return ("" + I18n.translateToLocal(this.getUnlocalizedName() + ".name")).trim();
+        }
+        return super.getUnlocalizedNameInefficiently(par1ItemStack);
+    }
 
-	//Entityを右クリックした時に呼ばれるメソッド．なぜか呼ばれない
-	@Override
-	public boolean itemInteractionForEntity(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer,
-			EntityLivingBase par3EntityLivingBase)
-	{
-		if (par3EntityLivingBase.worldObj.isRemote) {
-			return false;
-		}
-		if (par1ItemStack != null && par1ItemStack.getItemDamage() == 0 && par3EntityLivingBase != null) {
-			int entityID = EntityList.getEntityID(par3EntityLivingBase);
-			if (!EntityList.entityEggs.containsKey(Integer.valueOf(entityID))) {
-				return false;
-			}
-			par3EntityLivingBase.setDead();
-			ItemStack newEgg = new ItemStack(Items.spawn_egg, 1, entityID);
-			if (--par1ItemStack.stackSize <= 0) {
-				par1ItemStack = null;
-			}
+/*    @Override
+    public int getColorFromItemStack(ItemStack stack, int renderPass) {
+        return 0xFFFFFF;
+    }*/
 
-			if (par3EntityLivingBase.entityDropItem(newEgg, 1.0F) != null)
-				return true;
-		}
-		return false;
-	}
+    //Entityを右クリックした時に呼ばれるメソッド．なぜか呼ばれない
+    @Override
+    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand) {
+        if (target.worldObj.isRemote) {
+            return false;
+        }
+        if (stack != null && stack.getItemDamage() == 0 && target != null) {
+            String entityID = EntityList.getEntityString(target);
+            if (!EntityList.ENTITY_EGGS.containsKey(entityID)) {
+                return false;
+            }
+            target.setDead();
+            ItemStack newEgg = new ItemStack(Items.SPAWN_EGG, 1, 0);
+            newEgg.setTagCompound(new NBTTagCompound());
+            newEgg.getTagCompound().setTag("EntityTag", new NBTTagCompound());
+            newEgg.getTagCompound().getCompoundTag("EntityTag").setString("id", entityID);
+            if (--stack.stackSize <= 0) {
+                stack = null;
+            }
 
-	//ItemMonsterPlacerでメソッドが使用されているので，オーバーライド．意味はなかった．
-//	@Override
-//	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
-//	{
-//		if (par1ItemStack.getItemDamage() != 0)
-//			return super.onItemRightClick(par1ItemStack, par2World, par3EntityPlayer);
-//		else {
-//			if (par2World.isRemote) {
-//				return par1ItemStack;
-//			} else {
-//				MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(par2World,
-//						par3EntityPlayer, true);
-//
-//				if (movingobjectposition == null) {
-//					return par1ItemStack;
-//				} else {
-//					if (movingobjectposition.typeOfHit == MovingObjectType.ENTITY) {
-//						Entity entity = movingobjectposition.entityHit;
-//						if (entity instanceof EntityLivingBase) {
-//							if (this.itemInteractionForEntity(par1ItemStack, par3EntityPlayer,
-//									(EntityLivingBase) entity))
-//								return null;
-//							else
-//								return par1ItemStack;
-//						}
-//					}
-//					return par1ItemStack;
-//				}
-//			}
-//		}
-//	}
+            if (target.entityDropItem(newEgg, 1.0F) != null)
+                return true;
+        }
+        return false;
+    }
 
-	//左クリックでも動作するように．こちらは動く．
-	@Override
-	public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLivingBase,
-			EntityLivingBase par3EntityLivingBase)
-	{
-		this.itemInteractionForEntity(par1ItemStack, (EntityPlayer) par3EntityLivingBase, par2EntityLivingBase);
-		return true;
-	}
+     //左クリックでも動作するように．こちらは動く．
+    @Override
+    public boolean hitEntity(ItemStack stack, EntityLivingBase target,
+                             EntityLivingBase attacker) {
+        this.itemInteractionForEntity(stack, (EntityPlayer) attacker, target, EnumHand.MAIN_HAND);
+        return true;
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List)
-	{
-		par3List.add(new ItemStack(par1, 1, 0));
-	}
+    @Override
+    public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List<ItemStack> par3List) {
+        par3List.add(new ItemStack(par1, 1, 0));
+    }
 }
