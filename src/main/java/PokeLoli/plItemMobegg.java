@@ -10,9 +10,11 @@ import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 
-import java.util.List;
+import javax.annotation.Nonnull;
 
 public class plItemMobegg extends ItemMonsterPlacer {
     public plItemMobegg() {
@@ -21,26 +23,22 @@ public class plItemMobegg extends ItemMonsterPlacer {
     }
 
     @Override
-    public String getUnlocalizedNameInefficiently(ItemStack par1ItemStack) {
-        if (par1ItemStack.getItemDamage() == 0) {
+    @Nonnull
+    public String getUnlocalizedNameInefficiently(@Nonnull ItemStack itemStack) {
+        if (itemStack.getItemDamage() == 0) {
             return ("" + I18n.translateToLocal(this.getUnlocalizedName() + ".name")).trim();
         }
-        return super.getUnlocalizedNameInefficiently(par1ItemStack);
+        return super.getUnlocalizedNameInefficiently(itemStack);
     }
-
-/*    @Override
-    public int getColorFromItemStack(ItemStack stack, int renderPass) {
-        return 0xFFFFFF;
-    }*/
 
     //Entityを右クリックした時に呼ばれるメソッド．なぜか呼ばれない
     @Override
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand) {
-        if (target.worldObj.isRemote) {
+        if (target.getEntityWorld().isRemote) {
             return false;
         }
         if (stack != null && stack.getItemDamage() == 0 && target != null) {
-            String entityID = EntityList.getEntityString(target);
+            ResourceLocation entityID = EntityList.getKey(target);
             if (!EntityList.ENTITY_EGGS.containsKey(entityID)) {
                 return false;
             }
@@ -48,10 +46,8 @@ public class plItemMobegg extends ItemMonsterPlacer {
             ItemStack newEgg = new ItemStack(Items.SPAWN_EGG, 1, 0);
             newEgg.setTagCompound(new NBTTagCompound());
             newEgg.getTagCompound().setTag("EntityTag", new NBTTagCompound());
-            newEgg.getTagCompound().getCompoundTag("EntityTag").setString("id", entityID);
-            if (--stack.stackSize <= 0) {
-                stack = null;
-            }
+            newEgg.getTagCompound().getCompoundTag("EntityTag").setString("id", entityID.toString());
+            stack.shrink(1);
 
             if (target.entityDropItem(newEgg, 1.0F) != null)
                 return true;
@@ -68,7 +64,7 @@ public class plItemMobegg extends ItemMonsterPlacer {
     }
 
     @Override
-    public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List<ItemStack> par3List) {
-        par3List.add(new ItemStack(par1, 1, 0));
+    public void getSubItems(@Nonnull Item itemIn, CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
+        subItems.add(new ItemStack(itemIn, 1, 0));
     }
 }
